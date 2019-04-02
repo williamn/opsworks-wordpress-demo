@@ -10,6 +10,7 @@ end
 
 execute "Secure MySQL installation" do
   command "mysql --user=root <<_EOF_
+USE mysql;
 UPDATE USER SET authentication_string=password('#{node['db_root_password']}') where user='root';
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
