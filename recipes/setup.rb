@@ -17,5 +17,4 @@ DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 FLUSH PRIVILEGES;
 _EOF_"
-  command "echo -e "\n\nmysecret\nmysecret\n\n\nn\n\n " | mysql_secure_installation 2>/dev/null"
 end
