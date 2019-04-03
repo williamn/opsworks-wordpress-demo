@@ -1,4 +1,21 @@
-apt_package ['apache2', 'mysql-server', 'php', 'libapache2-mod-php', 'php-mysql']
+execute 'Prepare LAMP server' do
+  command 'sudo yum update -y'
+  command 'sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2'
+end
+
+yum_package ['httpd', 'mariadb-server']
+
+execute 'Start Apache web server' do
+  command 'sudo systemctl start httpd'
+  command 'sudo systemctl enable httpd'
+end
+
+execute 'Set file permissions' do 
+  command 'sudo usermod -a -G apache ec2-user'
+  command 'sudo chown -R ec2-user:apache /var/www'
+  command 'sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;'
+  command 'find /var/www -type f -exec sudo chmod 0664 {} \;'
+end
 
 cookbook_file "Copy info.php" do
   group "root"
@@ -6,6 +23,11 @@ cookbook_file "Copy info.php" do
   owner "root"
   path "/var/www/html/info.php"
   source "info.php"
+end
+
+execute 'Start MariaDB server'
+  command 'sudo systemctl start mariadb'
+  command 'sudo systemctl enable mariadb'
 end
 
 execute "Secure MySQL installation" do
