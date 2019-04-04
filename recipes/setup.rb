@@ -3,7 +3,7 @@ execute 'Prepare LAMP server' do
   command 'sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2'
 end
 
-yum_package ['httpd', 'mariadb-server']
+yum_package ['httpd', 'mariadb-server', 'php-mysqlnd']
 
 execute 'Start Apache web server' do
   command 'sudo systemctl start httpd'
@@ -16,10 +16,11 @@ execute 'Set file permissions' do
   command 'sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;'
   command 'find /var/www -type f -exec sudo chmod 0664 {} \;'
 end
+
 cookbook_file 'Copy info.php' do
-  group 'root'
+  group 'apache'
   mode '0755'
-  owner 'root'
+  owner 'ec2-user'
   path '/var/www/html/info.php'
   source 'info.php'
 end
