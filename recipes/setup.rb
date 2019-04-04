@@ -1,3 +1,4 @@
+# FIXME execute should only have single command
 execute 'Prepare LAMP server' do
   command 'sudo yum update -y'
   command 'sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2'
@@ -5,11 +6,13 @@ end
 
 yum_package ['httpd', 'mariadb-server', 'php-mysqlnd']
 
+# FIXME execute should only have single command
 execute 'Start Apache web server' do
   command 'sudo systemctl start httpd'
   command 'sudo systemctl enable httpd'
 end
 
+# FIXME execute should only have single command
 execute 'Set file permissions' do
   command 'sudo usermod -a -G apache ec2-user'
   command 'sudo chown -R ec2-user:apache /var/www'
@@ -25,6 +28,7 @@ cookbook_file 'Copy info.php' do
   source 'info.php'
 end
 
+# FIXME execute should only have single command
 execute 'Start MariaDB server' do
   command 'sudo systemctl start mariadb'
   command 'sudo systemctl enable mariadb'
